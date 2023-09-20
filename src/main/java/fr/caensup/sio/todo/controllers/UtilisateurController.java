@@ -60,6 +60,12 @@ public class UtilisateurController {
 		return new ModelAndView("/users/index", HttpStatus.NOT_FOUND);
 	}
 
+	@PostMapping("/users/update/{id}")
+	public RedirectView submitUserAction(@ModelAttribute Utilisateur user) {
+		uRepository.save(user);
+		return new RedirectView("/users");
+	}
+
 	@PostMapping("/users/delete")
 	public RedirectView deleteConfAction(RedirectAttributes attrs, @RequestParam int id) {
 		Optional<Utilisateur> optUser = uRepository.findById(id);
