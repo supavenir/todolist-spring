@@ -1,0 +1,43 @@
+{{> /include/header }}
+
+<h2>Utilisateurs</h2>
+<a href="/users/create" class="btn btn-dark">Ajouter un utilisateur...</a>
+{{#message}}
+<div class="alert alert-success" role="alert">
+  {{.}}
+</div>
+{{/message}}
+{{#modal}}
+	{{> /users/confirmation}}
+{{/modal}}
+<table class="table">
+	<thead>
+		<tr>
+			<th>Login</th>
+			<th>Email</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+	{{#users}}
+		<tr>
+			<td>{{login}}</td>
+			<td>{{email}}</td>
+			<td>
+				<a href="/users/{{id}}"><i class="fa-solid fa-eye"></i></a>
+				<a href="/users/update/{{id}}" class="btn btn-dark btn-sm">
+					<i class="fa-solid fa-pen"></i>
+				</a>
+				<form class="d-inline" action="/users/delete" method="post">
+					<input type="hidden" name="id" value="{{id}}">
+					<button class="btn btn-sm btn-danger">
+					<i class="fa-solid fa-remove"></i>
+					</button>
+				</form>
+			</td>
+		</tr>
+	{{/users}}
+	</tbody>
+</table>
+
+{{> /include/footer }}
