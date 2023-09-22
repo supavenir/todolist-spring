@@ -1,9 +1,15 @@
 package fr.caensup.sio.todo.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,4 +24,7 @@ public class Utilisateur {
 	private String email = "";
 	private String login = "";
 	private String password = "";
+
+	@OneToMany(mappedBy = "utilisateur", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<TodoList> listes = new HashSet<TodoList>();
 }

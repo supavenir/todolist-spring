@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import fr.caensup.sio.todo.models.TodoList;
 import fr.caensup.sio.todo.models.Utilisateur;
 import fr.caensup.sio.todo.repositories.UtilisateurRepository;
 
@@ -45,7 +46,16 @@ public class UtilisateurController {
 	}
 
 	@PostMapping("/users/create")
-	public RedirectView submitCreateUserAction(@ModelAttribute Utilisateur user, RedirectAttributes attrs) {
+	public RedirectView submitCreateUserAction(@ModelAttribute Utilisateur user, RedirectAttributes attrs,
+			@RequestParam String myLists) {
+		if (myLists != "") {
+			for (String listName : myLists.split(",")) {
+				TodoList list = new TodoList();
+				list.setNom(listName);
+				list.setUtilisateur(user);
+				user.getListes().add(list);
+			}
+		}
 		uRepository.save(user);
 		attrs.addFlashAttribute("message", "Utilisateur " + user.getLogin() + " ajouté");
 		return new RedirectView("/users");
