@@ -31,6 +31,15 @@ public class UtilisateurController {
 		return "/users/index";
 	}
 
+	@PostMapping("/users/filter")
+	public ModelAndView filterAction(@RequestParam String filter) {
+		ModelAndView mView = new ModelAndView("/users/index");
+		mView.addObject("filter", filter);
+		filter = "%" + filter + "%";
+		mView.addObject("users", uRepository.filter(filter, filter));
+		return mView;
+	}
+
 	@GetMapping("/users/{id}")
 	public ModelAndView showUserAction(@PathVariable int id) {
 		Optional<Utilisateur> optUser = uRepository.findById(id);
@@ -98,4 +107,5 @@ public class UtilisateurController {
 		}
 		return new RedirectView("/users");
 	}
+
 }

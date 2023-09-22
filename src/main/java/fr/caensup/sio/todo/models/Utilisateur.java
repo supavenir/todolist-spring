@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,4 +28,7 @@ public class Utilisateur {
 
 	@OneToMany(mappedBy = "utilisateur", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<TodoList> listes = new HashSet<TodoList>();
+
+	@ManyToMany(mappedBy = "collaborateurs")
+	private Set<TodoList> listesPartagees = new HashSet<TodoList>();
 }

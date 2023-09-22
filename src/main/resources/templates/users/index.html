@@ -1,7 +1,12 @@
 {{> /include/header }}
 
 <h2>Utilisateurs</h2>
+<div class="mb-1">
 <a href="/users/create" class="btn btn-dark">Ajouter un utilisateur...</a>
+</div>
+<form method="post" action="/users/filter">
+	<input class="form-control" type="search" name="filter" placeholder="Filtrer par nom ou par email..." value="{{#filter}}{{.}}{{/filter}}">
+</form>
 {{#message}}
 <div class="alert alert-success" role="alert">
   {{.}}
@@ -15,7 +20,8 @@
 		<tr>
 			<th>Login</th>
 			<th>Email</th>
-			<th>Listes</th>
+			<th>Mes listes</th>
+			<th>Partagées</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -25,6 +31,7 @@
 			<td>{{login}}</td>
 			<td>{{email}}</td>
 			<td>{{listes.size}}</td>
+			<td>{{listesPartagees}}</td>
 			<td>
 				<a href="/users/{{id}}"><i class="fa-solid fa-eye"></i></a>
 				<a href="/users/update/{{id}}" class="btn btn-dark btn-sm">
