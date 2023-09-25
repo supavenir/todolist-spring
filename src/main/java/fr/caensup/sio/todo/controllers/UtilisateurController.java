@@ -1,9 +1,6 @@
 package fr.caensup.sio.todo.controllers;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +12,22 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import fr.caensup.sio.todo.exceptions.InvalidUserException;
+import fr.caensup.sio.todo.exceptions.UserNotFoundException;
 import fr.caensup.sio.todo.models.TodoList;
 import fr.caensup.sio.todo.models.Utilisateur;
 import fr.caensup.sio.todo.repositories.UtilisateurRepository;
+import fr.caensup.sio.todo.services.UtilisateurService;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UtilisateurController {
 
 	@Autowired
 	private UtilisateurRepository uRepository;
+
+	@Autowired
+	private UtilisateurService userService;
 
 	@GetMapping("/users")
 	public String indexAction(ModelMap model) {
@@ -41,12 +45,8 @@ public class UtilisateurController {
 	}
 
 	@GetMapping("/users/{id}")
-	public ModelAndView showUserAction(@PathVariable int id) {
-		Optional<Utilisateur> optUser = uRepository.findById(id);
-		if (optUser.isPresent()) {
-			return new ModelAndView("/users/show", "user", optUser.get());
-		}
-		return new ModelAndView("", HttpStatus.NOT_FOUND);
+	public ModelAndView showUserAction(@PathVariable int id) throws UserNotFoundException {
+		return new ModelAndView("/users/show", "user", userService.getById(id));
 	}
 
 	@GetMapping("/users/create")
@@ -71,12 +71,8 @@ public class UtilisateurController {
 	}
 
 	@GetMapping("/users/update/{id}")
-	public ModelAndView updateUserAction(@PathVariable int id) {
-		Optional<Utilisateur> optUser = uRepository.findById(id);
-		if (optUser.isPresent()) {
-			return new ModelAndView("/users/form", "user", optUser.get());
-		}
-		return new ModelAndView("/users/index", HttpStatus.NOT_FOUND);
+	public ModelAndView updateUserAction(@PathVariable int id) throws UserNotFoundException {
+		return new ModelAndView("/users/form", "user", userService.getById(id));
 	}
 
 	@PostMapping("/users/update/{id}")
@@ -86,26 +82,38 @@ public class UtilisateurController {
 	}
 
 	@PostMapping("/users/delete")
-	public RedirectView deleteConfAction(RedirectAttributes attrs, @RequestParam int id) {
-		Optional<Utilisateur> optUser = uRepository.findById(id);
-		if (optUser.isPresent()) {
-			attrs.addFlashAttribute("modal", true);
-			attrs.addFlashAttribute("toDelete", optUser.get());
-
-		}
+	public RedirectView deleteConfAction(RedirectAttributes attrs, @RequestParam int id) throws UserNotFoundException {
+		Utilisateur user = userService.getById(id);
+		attrs.addFlashAttribute("modal", true);
+		attrs.addFlashAttribute("toDelete", user);
 		return new RedirectView("/users");
 	}
 
 	@PostMapping("/users/delete/f")
-	public RedirectView deleteAction(RedirectAttributes attrs, @RequestParam int id) {
-		Optional<Utilisateur> optUser = uRepository.findById(id);
-		if (optUser.isPresent()) {
-			Utilisateur user = optUser.get();
-			uRepository.delete(user);
-			attrs.addFlashAttribute("message", user.getLogin() + " supprimé !");
-
-		}
+	public RedirectView deleteAction(RedirectAttributes attrs, @RequestParam int id) throws UserNotFoundException {
+		Utilisateur user = userService.getById(id);
+		uRepository.delete(user);
+		attrs.addFlashAttribute("message", user.getLogin() + " supprimé !");
 		return new RedirectView("/users");
+	}
+
+	@GetMapping("/login")
+	public String loginAction() {
+		return "/users/login";
+	}
+
+	@PostMapping("/login")
+	public RedirectView loginSubmitAction(@RequestParam String login, HttpSession session) throws InvalidUserException {
+		Utilisateur user = userService.findByLogin(login);
+		session.setAttribute("user", login);
+		session.setAttribute("listes", user.getListes());
+		return new RedirectView("/");
+	}
+
+	@GetMapping("/logout")
+	public RedirectView logoutAction(HttpSession session) {
+		session.invalidate();
+		return new RedirectView("/");
 	}
 
 }

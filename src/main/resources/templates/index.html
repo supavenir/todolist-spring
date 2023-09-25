@@ -1,0 +1,10 @@
+{{> /include/header }}
+{{#user}}
+	<span class="badge bg-success">{{.}}</span>
+	<a href="/logout" class="btn btn-danger">Se déconnecter</a>
+{{/user}}
+{{^user}}
+	<span class="badge bg-secondary">Non connecté </span>
+	<a href="/login" class="btn btn-primary">Se connecter</a>
+{{/user}}
+{{> /include/footer }}
