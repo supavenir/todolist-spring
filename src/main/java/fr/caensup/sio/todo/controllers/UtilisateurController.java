@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -111,7 +112,8 @@ public class UtilisateurController {
 	}
 
 	@GetMapping("/logout")
-	public RedirectView logoutAction(HttpSession session) {
+	public RedirectView logoutAction(HttpSession session, SessionStatus sessionStatus) {
+		sessionStatus.setComplete();
 		session.invalidate();
 		return new RedirectView("/");
 	}

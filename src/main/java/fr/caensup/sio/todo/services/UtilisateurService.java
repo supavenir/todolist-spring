@@ -28,7 +28,7 @@ public class UtilisateurService {
 		if (opt.isPresent()) {
 			return opt.get();
 		}
-		throw new UserNotFoundException();
+		throw new UserNotFoundException("Utilisateur d'identifiant " + id + " non trouvé !");
 	}
 
 }

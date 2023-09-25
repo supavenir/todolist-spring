@@ -1,8 +1,11 @@
 package fr.caensup.sio.todo.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import fr.caensup.sio.todo.exceptions.InvalidUserException;
 import fr.caensup.sio.todo.exceptions.UserNotFoundException;
@@ -17,8 +20,8 @@ public class ErrorController {
 	}
 
 	@ExceptionHandler(value = { UserNotFoundException.class })
-	@ResponseBody
-	public String userNotFoundAction() {
-		return "Utilisateur inexistant";
+	@ResponseStatus(value = HttpStatus.NOT_FOUND)
+	public ModelAndView userNotFoundAction(UserNotFoundException exception) {
+		return new ModelAndView("/error/404", "message", exception.getMessage());
 	}
 }
