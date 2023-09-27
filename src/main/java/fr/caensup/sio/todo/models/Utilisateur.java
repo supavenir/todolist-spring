@@ -9,14 +9,17 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity(name = "Utilisateur")
 @Getter
 @Setter
+@Table(indexes = { @Index(columnList = "login", unique = true), @Index(columnList = "email", unique = true) })
 public class Utilisateur {
 
 	@Id

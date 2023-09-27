@@ -108,7 +108,7 @@ public class UtilisateurController {
 		Utilisateur user = userService.findByLogin(login);
 		session.setAttribute("user", login);
 		session.setAttribute("listes", user.getListes());
-		return new RedirectView("/");
+		return new RedirectView("/todos");
 	}
 
 	@GetMapping("/logout")
