@@ -1,7 +1,11 @@
 package fr.caensup.sio.todo.models;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -20,7 +24,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(indexes = { @Index(columnList = "login", unique = true), @Index(columnList = "email", unique = true) })
-public class Utilisateur {
+public class Utilisateur implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,4 +38,35 @@ public class Utilisateur {
 
 	@ManyToMany(mappedBy = "collaborateurs")
 	private Set<TodoList> listesPartagees = new HashSet<TodoList>();
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		return login;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 }

@@ -98,24 +98,4 @@ public class UtilisateurController {
 		return new RedirectView("/users");
 	}
 
-	@GetMapping("/login")
-	public String loginAction() {
-		return "/users/login";
-	}
-
-	@PostMapping("/login")
-	public RedirectView loginSubmitAction(@RequestParam String login, HttpSession session) throws InvalidUserException {
-		Utilisateur user = userService.findByLogin(login);
-		session.setAttribute("user", login);
-		session.setAttribute("listes", user.getListes());
-		return new RedirectView("/todos");
-	}
-
-	@GetMapping("/logout")
-	public RedirectView logoutAction(HttpSession session, SessionStatus sessionStatus) {
-		sessionStatus.setComplete();
-		session.invalidate();
-		return new RedirectView("/");
-	}
-
 }
