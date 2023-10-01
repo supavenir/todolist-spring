@@ -26,12 +26,8 @@ public class DbUserService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<Utilisateur> optUser=uRepo.findByLogin(username);
-		if(optUser.isPresent()) {
-			Utilisateur user=optUser.get();
-			return new User(username,user.getPassword(),getGrantedAuthorities());
-		}
-		return null;
-	}
+        return optUser.orElse(null);
+    }
 	
 	private List<GrantedAuthority> getGrantedAuthorities(){
 		return new ArrayList<GrantedAuthority>();

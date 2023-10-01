@@ -4,6 +4,7 @@ import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +22,8 @@ public class MainController {
 	public UtilisateurService userService;
 
 	@GetMapping("/")
-	public String indexAction(Authentication auth,ModelMap model) {
-		model.addAttribute("user",auth.getDetails());
+	public String indexAction(@AuthenticationPrincipal Utilisateur user, ModelMap model) {
+		model.addAttribute("user",user);
 		return "/index";
 	}
 	
