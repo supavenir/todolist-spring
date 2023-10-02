@@ -1,6 +1,5 @@
 package fr.caensup.sio.todo;
 
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,12 +19,16 @@ import fr.caensup.sio.todo.services.DbUserService;
 public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests((req)->req
-        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"),
-        		AntPathRequestMatcher.antMatcher("/createUser/**")
-        		).permitAll()
-            .anyRequest().authenticated()
-        ).formLogin((form)-> form.loginPage("/login").permitAll()).headers((headers)->headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
+        		(req)->req.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"),AntPathRequestMatcher.antMatcher("/createUser/**"))
+        		.permitAll()
+        		.anyRequest()
+        		.authenticated()
+        ).formLogin(
+        		(form)-> form.loginPage("/login").permitAll())
+        		.headers(
+        				(headers)->headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+        				);
         return http.build();
     }
     

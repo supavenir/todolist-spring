@@ -69,4 +69,9 @@ public class Utilisateur implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return login+ " ("+email+")";
+	}
 }
