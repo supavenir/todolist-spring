@@ -1,12 +1,8 @@
 package fr.caensup.sio.todo.services;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,10 +24,6 @@ public class DbUserService implements UserDetailsService {
 		Optional<Utilisateur> optUser=uRepo.findByLogin(username);
         return optUser.orElse(null);
     }
-	
-	private List<GrantedAuthority> getGrantedAuthorities(){
-		return new ArrayList<GrantedAuthority>();
-	}
 	
 	public void encodePassword(Utilisateur user) {
 		user.setPassword(pEncoder.encode(user.getPassword()));
